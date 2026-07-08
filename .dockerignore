@@ -1,0 +1,7 @@
+.venv
+.git
+.idea
+tests
+Markdowns
+__pycache__
+*.pyc
