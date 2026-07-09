@@ -1,3 +1,4 @@
+
 # RAGdoll — Enterprise RAG Hybrid Search
 
 *English version: [README.en.md](README.en.md).*
