@@ -63,6 +63,14 @@ Dotyczy w szczególności: chunking, dense/sparse embedding, konfiguracja kolekc
 
 **Nie przesadzaj z wyzwaniami przy dużym, powtarzalnym kodzie** — jeśli piszemy 5. podobny endpoint CRUD, wyzwanie na pierwszym wystarczy; kolejne generuj wprost, ale zaznacz krótko co się powtarza i czy coś jest inne.
 
+### Wyjątek: pisanie testów (od 2026-07-20)
+
+Testy (unit + integration) piszesz **Ty wprost**, bez formatu snippet-z-lukami — powód: mockowanie (`MagicMock`, `side_effect`, `monkeypatch`) to osobna umiejętność, którą user świadomie odkłada na później, żeby nie blokować postępu w fazach. Po napisaniu testu dodajesz wyjaśnienie do `Markdowns/TestWriteups/<nazwa_pliku_testowego>.md` — co dokładnie mockujemy, dlaczego, i jaki błąd dany test by złapał (analogicznie do pytań teoretycznych, ale jako zapis, nie dialog). Katalog `Markdowns/TestWriteups/` jest w `.gitignore` — to notatki do nauki, nie część repo.
+
+**Na koniec sesji testowej (od 2026-07-20, na zawsze):** cały diff `Markdowns/TestWriteups/` przenosisz (nie kopiujesz — `mv`) do `D:\01Kody\AI\AWSProjekty\_WriteupsHelper\_RAGDoll\TestWriteups`, poza repo. Katalog w repo zostaje pusty po przeniesieniu (dalej gitignored, gotowy na kolejną sesję).
+
+Reszta zasad (pytania teoretyczne dla konceptów typu RRF, snippety dla logiki biznesowej ingestion/retrieval/generation) obowiązuje bez zmian.
+
 ---
 
 ## STANDARDY TECHNICZNE (obowiązują zawsze)

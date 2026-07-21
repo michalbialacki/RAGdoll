@@ -1,5 +1,6 @@
 import json
 from unittest.mock import MagicMock
+import asyncio
 
 import pytest
 
@@ -19,27 +20,33 @@ def _mock_response(embedding: list[float]) -> MagicMock:
 
 
 async def test_embed_texts_retries_then_succeeds(monkeypatch):
-    # TODO:
-    # 1. patch asyncio.sleep so the test doesn't actually wait:
-    #    monkeypatch.setattr("asyncio.sleep", ...) — needs to be an async
-    #    no-op callable, since `worker` does `await asyncio.sleep(delay)`
-    # 2. build a mock client whose `invoke_model` raises an exception on the
-    #    first call, then returns _mock_response([0.1, 0.2, ...]) on the
-    #    second — use `side_effect=[Exception("throttled"), _mock_response(...)]`
-    # 3. call `await embed_texts(client, ["some text"])`
-    # 4. assert the result is the embedding from the *successful* call, and
-    #    that invoke_model was called exactly twice (proves it retried once,
-    #    not zero times and not more)
-    raise NotImplementedError
+    async def mock_sleep(delay=None):
+        return None
+
+    monkeypatch.setattr(asyncio, "sleep", mock_sleep)
+
+    client = MagicMock()
+    client.invoke_model.side_effect = [
+        Exception("throttled"),
+        _mock_response([0.1, 0.2, 0.3]),
+    ]
+
+    result = await embed_texts(client, ["ragdoll_chunks"])
+
+    assert result == [[0.1, 0.2, 0.3]]
+    assert client.invoke_model.call_count == 2
 
 
 async def test_embed_texts_raises_after_five_attempts(monkeypatch):
-    # TODO:
-    # 1. patch asyncio.sleep the same way as above
-    # 2. build a mock client whose invoke_model always raises
-    #    (side_effect=Exception("throttled") — no list, so every call raises)
-    # 3. assert `embed_texts` re-raises (pytest.raises) instead of swallowing
-    #    the error or returning a partial/None result
-    # 4. assert invoke_model was called exactly 5 times (proves it doesn't
-    #    retry forever, and doesn't give up early)
-    raise NotImplementedError
+    async def mock_sleep(delay=None):
+        return None
+
+    monkeypatch.setattr(asyncio, "sleep", mock_sleep)
+
+    client = MagicMock()
+    client.invoke_model.side_effect = Exception("throttled")
+
+    with pytest.raises(Exception, match="throttled"):
+        await embed_texts(client, ["ragdoll_chunks"])
+
+    assert client.invoke_model.call_count == 5
