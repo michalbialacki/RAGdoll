@@ -56,6 +56,31 @@ async def test_hybrid_search_calls_query_points_with_dense_and_sparse_prefetch(s
     assert sparse_prefetch.limit == PREFETCH_LIMIT
 
 
+async def test_hybrid_search_dense_only_skips_sparse_prefetch_but_keeps_rrf_fusion(sparse_model):
+    bedrock_client = MagicMock()
+    bedrock_client.invoke_model.return_value = _mock_bedrock_response([0.1, 0.2, 0.3])
+    qdrant_client = MagicMock()
+    qdrant_client.query_points.return_value = MagicMock(points=[])
+
+    await hybrid_search(
+        bedrock_client=bedrock_client,
+        sparse_model=sparse_model,
+        qdrant_client=qdrant_client,
+        collection_name="ragdoll_chunks",
+        query_text="hello world",
+        limit=5,
+        use_sparse=False,
+    )
+
+    _, kwargs = qdrant_client.query_points.call_args
+    # still fused via RRF (not a plain vector search) so scores stay on the same
+    # 1/(k+rank) scale as the hybrid mode — see hybrid_search.py docstring.
+    assert kwargs["query"] == FusionQuery(fusion=Fusion.RRF)
+    prefetches = kwargs["prefetch"]
+    assert len(prefetches) == 1
+    assert prefetches[0].using == DENSE_VECTOR_NAME
+
+
 async def test_hybrid_search_embeds_query_not_document(sparse_model, monkeypatch):
     """query_embed (presence weights) must be used, not embed_documents (TF weights) —
     see the asymmetry documented in sparse_embedding.py. Using the wrong one wouldn't

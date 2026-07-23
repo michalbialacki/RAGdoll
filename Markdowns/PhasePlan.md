@@ -1,4 +1,4 @@
-cl# Plan faz – Enterprise RAG Hybrid Search (Bedrock + Qdrant)
+# Plan faz – Enterprise RAG Hybrid Search (Bedrock + Qdrant)
 
 Źródło prawdy: `Markdowns/EnterpriseRAGWriteup.md`. Każda faza kończy się testami (pytest) jako obowiązkowym ostatnim krokiem — nie przechodzimy dalej z czerwonymi testami.
 

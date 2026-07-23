@@ -1,4 +1,4 @@
-"""POST /query — hybrid retrieval endpoint (Phase 02: no LLM generation yet)."""
+"""POST /query — hybrid retrieval + Bedrock LLM generation (Phase 03)."""
 
 from typing import Annotated, Any
 
@@ -14,6 +14,7 @@ from ragdoll.api.dependencies import (
     get_settings,
     get_sparse_model,
 )
+from ragdoll.generation.answer_service import answer_query
 from ragdoll.retrieval.hybrid_search import hybrid_search
 
 router = APIRouter()
@@ -32,7 +33,8 @@ class RetrievedChunk(BaseModel):
 
 
 class QueryResponse(BaseModel):
-    results: list[RetrievedChunk]
+    answer: str
+    sources: list[RetrievedChunk]
 
 
 @router.post("/query", response_model=QueryResponse)
@@ -51,7 +53,7 @@ async def query(
         query_text=request.text,
         limit=request.limit,
     )
-    results = [
+    sources = [
         RetrievedChunk(
             source=point.payload["source"],
             chunk_index=point.payload["chunk_index"],
@@ -61,4 +63,5 @@ async def query(
         for point in points
         if point.payload is not None
     ]
-    return QueryResponse(results=results)
+    answer = await answer_query(bedrock_client, request.text, points)
+    return QueryResponse(answer=answer, sources=sources)
