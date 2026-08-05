@@ -1,4 +1,5 @@
 """Assemble chunk + dense + sparse embeddings into Qdrant points and write them."""
+
 import uuid
 
 from qdrant_client import QdrantClient
@@ -21,7 +22,7 @@ def build_point(
     """
     namespace = uuid.NAMESPACE_DNS
     name = f"{source}_{chunk_index}"
-    point_id = str(uuid.uuid5(namespace,name))
+    point_id = str(uuid.uuid5(namespace, name))
     payload = {
         "source": source,
         "chunk_index": chunk_index,
@@ -42,5 +43,5 @@ def upsert_chunks(client: QdrantClient, collection_name: str, points: list[Point
     client.upsert(
         collection_name=collection_name,
         points=points,
-        wait=True # pewnosc ze wszystko zostalo zaindeksowane i zwroci kontrole
+        wait=True,  # pewnosc ze wszystko zostalo zaindeksowane i zwroci kontrole
     )

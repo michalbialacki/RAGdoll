@@ -47,9 +47,7 @@ def test_query_endpoint_returns_answer_and_sources(monkeypatch):
     assert response.status_code == 200
     assert response.json() == {
         "answer": "the answer",
-        "sources": [
-            {"source": "doc.pdf", "chunk_index": 2, "text": "hello world", "score": 0.75}
-        ],
+        "sources": [{"source": "doc.pdf", "chunk_index": 2, "text": "hello world", "score": 0.75}],
     }
 
     mock_hybrid_search.assert_called_once()

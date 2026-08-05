@@ -22,13 +22,10 @@ def get_model() -> SparseTextEmbedding:
 def embed_documents(model: SparseTextEmbedding, texts: list[str]) -> list[SparseVector]:
     """Embed chunks for indexing (TF-with-saturation, no IDF)."""
     embeddings = model.embed(texts)
-    return [
-        SparseVector(indices=e.indices.tolist(), values=e.values.tolist())
-        for e in embeddings
-    ]
+    return [SparseVector(indices=e.indices.tolist(), values=e.values.tolist()) for e in embeddings]
 
 
 def embed_query(model: SparseTextEmbedding, text: str) -> SparseVector:
     """Embed a single query for search (presence weights, IDF applied server-side)."""
-    embedding = next(model.query_embed(text))
+    embedding = next(iter(model.query_embed(text)))
     return SparseVector(indices=embedding.indices.tolist(), values=embedding.values.tolist())

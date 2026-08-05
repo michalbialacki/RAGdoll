@@ -3,6 +3,7 @@
 Titan V2's InvokeModel takes exactly one `inputText` per call — there is no
 batch endpoint. Concurrency across chunks happens on our side.
 """
+
 import asyncio
 import json
 import random
@@ -19,6 +20,7 @@ def _embed_one_sync(client: Any, text: str) -> list[float]:
     payload = json.loads(response["body"].read())
     embedding: list[float] = payload["embedding"]
     return embedding
+
 
 async def worker(
     client: Any, texts: list[str], item_id: int, semaphore: asyncio.Semaphore

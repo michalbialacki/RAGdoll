@@ -36,9 +36,7 @@ async def test_hybrid_search_finds_point_by_exact_token(qdrant_client, sparse_mo
         upsert_chunks(qdrant_client, TEST_COLLECTION, [point])
 
         bedrock_client = MagicMock()
-        bedrock_client.invoke_model.return_value = _mock_bedrock_response(
-            [0.1] * DENSE_VECTOR_SIZE
-        )
+        bedrock_client.invoke_model.return_value = _mock_bedrock_response([0.1] * DENSE_VECTOR_SIZE)
 
         results = await hybrid_search(
             bedrock_client=bedrock_client,

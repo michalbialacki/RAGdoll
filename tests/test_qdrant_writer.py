@@ -31,9 +31,7 @@ def test_build_point_payload_and_vectors():
 def test_upsert_chunks_calls_client_with_wait_true():
     client = MagicMock()
     point = build_point("doc.pdf", 3, "hello world", DENSE, SPARSE)
-    upsert_chunks(client,"ragdoll_chunks",[point])
+    upsert_chunks(client, "ragdoll_chunks", [point])
     client.upsert.assert_called_once_with(
-        collection_name = "ragdoll_chunks",
-        points = [point],
-        wait = True
+        collection_name="ragdoll_chunks", points=[point], wait=True
     )
