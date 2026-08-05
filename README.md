@@ -98,7 +98,3 @@ src/ragdoll/
 ## Świadomość kosztowa
 
 Projekt świadomie unika NAT Gateway (~32 USD/mies. naliczane per minuta, niezależnie od ruchu), umieszczając zadania ECS Fargate w publicznej podsieci za security groupem — udokumentowany, kosztowy kompromis dla środowiska portfolio/dev, nie postawa produkcyjna. Terraform jest stosowany i niszczony wokół uruchomień testów integracyjnych — nic nie zostaje uruchomione na stałe. Pełne rozbicie kosztów w [`Markdowns/EnterpriseRAGWriteup.md`](Markdowns/EnterpriseRAGWriteup.md).
-
-## Kontekst
-
-Pełne uzasadnienie decyzji architektonicznych i luka kompetencyjna, którą wypełnia ten projekt względem wcześniejszych: [`Markdowns/EnterpriseRAGWriteup.md`](Markdowns/EnterpriseRAGWriteup.md).
