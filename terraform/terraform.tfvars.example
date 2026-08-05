@@ -1,0 +1,5 @@
+# Copy to terraform.tfvars (gitignored) and fill in real values.
+# terraform.tfvars is auto-loaded by `terraform plan`/`apply` — no -var flags needed.
+
+qdrant_url          = "http://localhost:6333"
+budget_alert_email  = "you@example.com"
